@@ -13,13 +13,10 @@ function _pinyin_comp()
 # Refer to http://zshwiki.org/home/examples/compsys/general
 #
 #
-if [[ -n `whence -f _force_rehash` ]]
-then
-        _force_rehash() {
-                (( CURRENT == 1 )) && rehash
-                return 1 # Because we did not really complete anything
-        }
-fi
+_pinyin_force_rehash() {
+    (( CURRENT == 1 )) && rehash
+    return 1 # Because we did not really complete anything
+}
 
 # pinyin-comp is performed as one part of user-expand
 zstyle ':completion:*' user-expand _pinyin_comp
@@ -29,6 +26,6 @@ zstyle ':completion:*:user-expand:*' tag-order expansions
 
 # make use-expand perform as last, when needed
 zstyle ':completion:*' completer \
-    _oldlist _expand _force_rehash _complete _match _user_expand
+    _oldlist _expand _pinyin_force_rehash _complete _match _user_expand
 
 # vim:set ft=zsh et:
