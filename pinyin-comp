@@ -265,4 +265,4 @@ if __name__ == '__main__':
             pass
     else:
         for candicate in reply:
-            print escape_string(candicate)
+            print candicate

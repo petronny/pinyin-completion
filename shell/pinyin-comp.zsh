@@ -7,9 +7,9 @@ function _pinyin_comp()
     local IFS=$'\n'
 
     if [ "$words[1]" = "cd" ] ; then
-            reply=($(pinyin-comp x-d $*) $*)
+        reply=(${(q)$(pinyin-comp x-d $*)} $*)
     else
-            reply=($(pinyin-comp 0 $*) $*)
+        reply=(${(q)$(pinyin-comp 0 $*)} $*)
     fi
 }
 
