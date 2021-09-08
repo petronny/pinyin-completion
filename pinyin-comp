@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/python
 # -*- coding:utf-8 -*-
 """
 complete path by acronym of pinyin initials
@@ -80,12 +80,7 @@ DOUBLE_WIDTH = {
                 }
 
 # fuzzy pinyin
-FUZZY = {}
-try:
-    FUZZY = eval( os.getenv("FUZZY") )
-    FUZZY.keys()
-except StandardError:
-    FUZZY = {}
+FUZZY = os.environ.get("FUZZY", {})
 
 def transform_double_width(uni_char):
     "transform double-width char into its single-width equivalent  "
@@ -130,7 +125,6 @@ def acronymize(uni_char):
 
 def get_acronym(text):
     "get acronym for text string"
-    text = unicodelize(text)
 
     acronym = u""
 
@@ -138,26 +132,6 @@ def get_acronym(text):
         acronym += acronymize(char)
 
     return acronym
-
-def unicodelize(text):
-    "try to convert string into unicode string."
-    if not isinstance(text, unicode):
-        try:
-            return unicode(text, default_encoding)
-        except UnicodeDecodeError:
-            pass
-
-    return text
-
-def stringlize(text):
-    "try to convert unicode string back into string"
-    if isinstance(text, unicode):
-        try:
-            return text.encode(default_encoding)
-        except UnicodeEncodeError:
-            pass
-
-    return text
 
 def expand_leading_tilda(path):
     "expand leading ~/ or ~user/"
@@ -176,7 +150,6 @@ if __name__ == '__main__':
 
     path = sys.argv[2].replace("\\","")
     path = expand_leading_tilda(path)
-    path = unicodelize(path)
     # support fuzzy pinyin
     path = "".join( [ fuzzynize(x) for x in path] )
 
@@ -248,21 +221,17 @@ if __name__ == '__main__':
 
             reply.append( candicate )
 
-    try:
-        locale.setlocale(locale.LC_ALL, "")
-    except StandardError:
-        pass
+    locale.setlocale(locale.LC_ALL, "")
 
     # when dealing with outer world, always use native encoding
-    reply = [ stringlize(x) for x in reply]
     reply.sort( key=locale.strxfrm )
 
     if index :
         try:
-            print (escape_string(reply[index - 1]))
+            print(escape_string(reply[index - 1]))
         except IndexError:
             # return the last candidate when index is out of range
             pass
     else:
         for candicate in reply:
-            print candicate
+            print(candicate)
