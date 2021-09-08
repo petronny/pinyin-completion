@@ -9,6 +9,6 @@ setup(  name="pinyin-comp",
         author="Jekyll Wu",
         author_email="adaptee@gmail.com",
         url="http://github.com/adaptee/pinyin-completion",
-        packages=['pinyin'],
+        packages=['pinyin_comp'],
         scripts=['pinyin-comp'] ,
      )
