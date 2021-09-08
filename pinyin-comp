@@ -49,7 +49,7 @@ import sys
 import locale
 import re
 
-import pinyin
+import pinyin_comp
 
 _, default_encoding = locale.getdefaultlocale()
 
@@ -99,7 +99,7 @@ def fuzzynize(pinyin):
 def get_pinyin_initials(uni_char):
     "get the initial of Chinese pinyin"
     try:
-        pinyin_initial = pinyin.pinyin_initial[uni_char]
+        pinyin_initial = pinyin_comp.pinyin_initial[uni_char]
         return "".join(pinyin_initial)
     except KeyError:
         return uni_char
