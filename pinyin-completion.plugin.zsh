@@ -3,8 +3,6 @@
 0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
-# [:ascii:] need
-setopt rematchpcre
 local -A _punctuation_map=(
 	[～]=~
 	[！]=!
@@ -46,6 +44,9 @@ local -A _punctuation_map=(
 
 _pinyin_comp()
 {
+  # [:ascii:] need
+  setopt rematchpcre
+
   # unix file names can contain '\n', so use '\0' to separate them
   local IFS=$'\0' suffix result file k v
   local -i i=1
