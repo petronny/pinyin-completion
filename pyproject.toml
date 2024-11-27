@@ -1,2 +1,5 @@
 [tool.mdformat]
 number = true
+
+[tool.codespell]
+ignore-words-list = "inbrace, nam, siz, infor, tht, nd, sav, nwe, fo, ofo, reenable, re-declared, mis, ake, dum, re-use, shft, conted, ue, ot, liness, strin, sting, fro, wont, shs, retying, truncat, childs, aline"

@@ -1,0 +1,28 @@
+#compdef zpinyin
+local subcommands=(
+  setDictionaryPath
+  hanziToPinyin
+)
+
+_arguments -s -S \
+  ": :(($subcommands))" \
+        '*:: :->option-or-argument'
+
+if [[ $state != option-or-argument ]]; then
+  return
+fi
+local curcontext=${curcontext%:*:*}:zpinyin-$words[1]:
+case $words[1] in
+setDictionaryPath)
+  _dirs
+  ;;
+hanziToPinyin)
+  _arguments -s -S \
+    {-t,--man_tone_style}"[Pinyin::ManTone::Style]:(0 1 2 8)" \
+    {-e,--error}"[Pinyin::Error]:(default ignore)" \
+    {-c,--candidates}"[display candidates]" \
+    {-v,--v_to_u}"[convert v to u]" \
+    ":hanzi" \
+    ":\$pinyin"
+  ;;
+esac

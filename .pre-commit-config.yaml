@@ -3,14 +3,14 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
-      - id: check-added-large-files
+      # - id: check-added-large-files
       - id: fix-byte-order-marker
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
       - id: check-merge-conflict
-      - id: trailing-whitespace
+      # - id: trailing-whitespace
       - id: mixed-line-ending
-      - id: end-of-file-fixer
+      # - id: end-of-file-fixer
       - id: detect-private-key
       - id: check-symlinks
       - id: check-ast
@@ -30,16 +30,17 @@ repos:
       - id: codespell
         additional_dependencies:
           - tomli
+        exclude: module/(Test/|patch_cfgac.diff)
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.19.1
     hooks:
       - id: gitlint
         args:
           - --msg-filename
-  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.0.3
-    hooks:
-      - id: editorconfig-checker
+  # - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+  #   rev: 3.0.3
+  #   hooks:
+  #     - id: editorconfig-checker
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
     rev: 3.0.0
     hooks:

@@ -43,7 +43,14 @@ expansions
 
 ## Dependencies
 
-- [pypinyin](https://github.com/mozillazg/python-pinyin) `>= 0.51.0`
+- [cpp-pinyin](https://github.com/wolfgitpr/cpp-pinyin/)
+- [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
+- [make](https://www.gnu.org/software/make/)
+- A C compiler
+
+Or:
+
+- [pypinyin](https://github.com/mozillazg/python-pinyin)
 
 ## Install
 

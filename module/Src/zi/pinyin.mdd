@@ -1,0 +1,7 @@
+name=zi/pinyin
+link=dynamic
+load=no
+
+autofeatures="b:pinyin"
+
+objects="pinyin.o"

@@ -8,6 +8,27 @@ if (( fpath[(I)$PINYIN_REPO_DIR] == 0 )); then
   fpath+=($PINYIN_REPO_DIR)
 fi
 
+if [[ ! -e "$PINYIN_REPO_DIR/module/Src/zi/pinyin.so" ]]; then
+  builtin print "${fg_bold[magenta]}zi${reset_color}/${fg_bold[yellow]}pinyin${reset_color} is building..."
+  autoload -Uz pinyin-compile &&
+    pinyin-compile $PINYIN_REPO_DIR
+elif [[ ! -f "${PINYIN_REPO_DIR}/module/COMPILED_AT" || ( "$PINYIN_REPO_DIR/module/COMPILED_AT" -ot "${PINYIN_REPO_DIR}/module/RECOMPILE_REQUEST" ) ]]; then
+  # Don't trust access times and verify hard stored values
+  [[ -e $PINYIN_REPO_DIR/module/COMPILED_AT ]] && local compiled_at_ts="$(<$PINYIN_REPO_DIR/module/COMPILED_AT)"
+  [[ -e $PINYIN_REPO_DIR/module/RECOMPILE_REQUEST ]] && local recompile_request_ts="$(<$PINYIN_REPO_DIR/module/RECOMPILE_REQUEST)"
+
+  if [[ "${recompile_request_ts:-1}" -gt "${compiled_at_ts:-0}" ]]; then
+    builtin echo "${fg_bold[red]}pinyin: single recompiletion requested by plugin's update${reset_color}"
+    autoload -Uz pinyin-compile &&
+      pinyin-compile $PINYIN_REPO_DIR
+  fi
+fi
+
+# Finally load the module - if it has compiled
+if [[ -e "$PINYIN_REPO_DIR/module/Src/zi/pinyin.so" ]]; then
+  module_path+=("$PINYIN_REPO_DIR/module/Src")
+fi
+
 autoload -Uz _pinyin_comp
 
 # pinyin-comp is performed as one part of user-expand

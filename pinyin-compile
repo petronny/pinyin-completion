@@ -1,0 +1,30 @@
+#
+# Compile the module
+#
+
+# Get CPPFLAGS, CFLAGS, LDFLAGS
+local cppf cf ldf
+zstyle -s ":pinyin:build" cppflags cppf || cppf="-I/usr/local/include"
+zstyle -s ":pinyin:build" cflags cf || cf="-Wall -O2 -g"
+zstyle -s ":pinyin:build" ldflags ldf || ldf="-L/usr/local/lib"
+
+(
+  local build=1
+  zmodload zsh/system && { zsystem flock -t 1 "$1/module/configure.ac" || build=0; }
+  if (( build )); then
+    builtin cd "$1/module"
+    local -a nix_shell
+    if (( $+commands[nix] )); then
+      nix_shell=(nix-shell ../shell.nix --pure --run)
+    fi
+    CPPFLAGS="$cppf" CFLAGS="$cf" LDFLAGS="$ldf" $nix_shell ./configure
+    command $nix_shell make clean
+    command $nix_shell make
+
+    local ts="$EPOCHSECONDS"
+    [[ -z "$ts" ]] && ts=$( date +%s )
+    builtin echo "$ts" >! COMPILED_AT
+  fi
+)
+
+# ex: filetype=zsh
