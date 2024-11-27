@@ -1,3 +1,28 @@
-reply=$(pypinyin -fslug -sz -p= "$1")
+local tone result
+local -a results
+
+if ! command -v zpinyin &>/dev/null; then
+  local -a nix_shell
+  if (( $+commands[nix] )); then
+    nix_shell=(nix-shell ../shell.nix --pure --run)
+  fi
+  zmodload zi/pinyin &&
+    zpinyin setDictionaryPath "$($nix_shell pkg-config --variable=dictdir cpp-pinyin)"
+  if ! command -v zpinyin &>/dev/null && command -v pypinyin &>/dev/null; then
+    reply=$(pypinyin -fslug -sz -p= "$1") &&
+    return
+  fi
+fi
+
+zpinyin hanziToPinyin $1 reply
+results=(${(s. .)reply})
+reply=
+for result in $results; do
+  tone=${result[-1]}
+  if [[ $tone == 1 || $tone == 2 || $tone == 3 || $tone == 4 ]]; then
+    result="${result[1]}"
+  fi
+  reply="$reply$result"
+done
 
 # ex: filetype=zsh
