@@ -7,6 +7,7 @@ local cppf cf ldf
 zstyle -s ":pinyin:build" cppflags cppf || cppf="-I/usr/local/include"
 zstyle -s ":pinyin:build" cflags cf || cf="-Wall -O2 -g"
 zstyle -s ":pinyin:build" ldflags ldf || ldf="-L/usr/local/lib"
+zstyle -s ":pinyin:build" libs lib || lib="-lstdc++ -lcpp-pinyin"
 
 (
   local build=1
@@ -17,7 +18,7 @@ zstyle -s ":pinyin:build" ldflags ldf || ldf="-L/usr/local/lib"
     if (( $+commands[nix] )); then
       nix_shell=(nix-shell ../shell.nix --pure --run)
     fi
-    CPPFLAGS="$cppf" CFLAGS="$cf" LDFLAGS="$ldf" $nix_shell ./configure
+    CPPFLAGS="$cppf" CFLAGS="$cf" LDFLAGS="$ldf" LIBS="$lib" $nix_shell ./configure
     command $nix_shell make clean
     command $nix_shell make
 
