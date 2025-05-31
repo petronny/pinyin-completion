@@ -25,7 +25,7 @@ if [[ "$1" != -d ]]; then
 }
 ))
     fi
-	chs=($(chsdir "x$1" "$cur"))
+	chs=($(pinyin-comp "x$1" "$cur"))
 	COMPREPLY=( "${COMPREPLY[@]}" "${toks[@]}" "${chs[@]}" )
 }
 
@@ -64,7 +64,7 @@ _filedir_xspec()
         }
         ))
 
-    chs=($(chsdir "x$1" "$cur"))
+    chs=($(pinyin-comp "x$1" "$cur"))
     COMPREPLY=( "${toks[@]}" "${chs[@]}" )
 }
 

@@ -1,53 +1,38 @@
-#!/usr/bin/env python
-# vim: set fileencoding=utf-8 :
+import pickle
+import argparse
 
-pinyin         = { }
-pinyin_initial = { }
+parser = argparse.ArgumentParser(description='Generate pinyin initials pickle file.')
+parser.add_argument('input_file', help='Input file containing pinyin mappings')
+parser.add_argument('output_file', help='Output pickle file for pinyin initials')
 
-if __name__ == "__main__":
+args = parser.parse_args()
 
-    lines = open("unicode-han-pinyin.txt").readlines()
+pinyin = {}
+pinyin_initial = {}
 
-    for line in lines :
+DOUBLE_WIDTH = {
+    "～": "~", "！": "!", "＠": "@", "＃": "#", "＄": "$", "％": "%", "＆": "&", "＊": "*",
+    "（": "(", "）": ")", "＿": "_", "－": "-", "＋": "+", "［": "[", "］": "]", "＜": "<",
+    "＞": ">", "？": "?", "，": ",", "。": ".", "／": "/", "、": "u",
+}
 
-        line = line[:-1] if line[-1] == '\n' else line
-        line = unicode( line, "utf-8")
 
-        unichar, accent = line.split('=')
+lines = open(args.input_file).readlines()
 
-        accent  = accent.lower()
-        initial = accent[0]
+for line in lines:
+    line = line.strip()
 
-        try :
-            pinyin[unichar].append(accent)
-        except KeyError:
-            pinyin[unichar] = [accent, ]
+    unichar, accent = line.split("=")
 
-        try :
-            pinyin_initial[unichar].append(initial)
-        except KeyError:
-            pinyin_initial[unichar] = [initial,]
+    accent = accent.lower()
+    initial = accent[0]
 
-    # remove duplication
-    for key in pinyin.keys():
-        pinyin[key] = list( set(pinyin[key] ) )
-    for key in pinyin_initial.keys():
-        pinyin_initial[key] = list( set(pinyin_initial[key]) )
+    pinyin.setdefault(unichar, set()).add(accent)
+    pinyin_initial.setdefault(unichar, set()).add(initial)
 
-    # now generate an python module containing pinyin table
-    print  "# vim: set fileencoding=utf-8 :"
-    print  ""
+for k, v in pinyin_initial.items():
+    pinyin_initial[k] = v.pop() if len(v) == 1 else f"`{''.join(sorted(list(v)))}`"
 
-    #print  "pinyin = {"
-    #for key in pinyin_initial.keys():
-        #print "u'%s' : %s ," % (key.encode("utf-8"),  pinyin[key] )
-    #print "}"
-
-    print ""
-    print ""
-
-    print  "pinyin_initial = {"
-    for key in pinyin_initial.keys():
-        print "u'%s' : %s ," % (key.encode("utf-8"),  pinyin_initial[key] )
-    print "}"
-
+pinyin_initial.update(DOUBLE_WIDTH)
+with open(args.output_file, 'wb') as f:
+    pickle.dump(pinyin_initial, f)
