@@ -7,7 +7,7 @@ Complete path by acronym of pinyin initials.
 
 ### Features
 
-* Fully rewritten and optimized in Python 3 (262 ➡️ 56 lines 🤯)
+* Fully rewritten and optimized in Python 3 (262 ➡️ 54 lines 🤯)
 * Accelerated loading with pickle
 * No additional dependencies or builds required
 

@@ -9,12 +9,10 @@ with open(Path(__file__).resolve().parent / 'tools/pinyin_initial.pkl', 'rb') as
 def get_acronym(text):
     return "".join(pinyin_initial.get(c, c) for c in text)
 
-def match_input(basename, entry):
+def match_input(basename_acronym, entry):
     entry_acronym = get_acronym(entry)
     if entry_acronym == entry:
         return False
-
-    basename_acronym = get_acronym(basename)
 
     i = j = 0
     while i < len(basename_acronym) and j < len(entry_acronym):
@@ -48,7 +46,7 @@ if __name__ == "__main__":
     if dironly == "x-d":
         entries = [i for i in entries if i.is_dir()]
 
-    entries = [i.name for i in entries if match_input(path.name, i.name)]
+    entries = [i.name for i in entries if match_input(get_acronym(path.name), i.name)]
     locale.setlocale(locale.LC_ALL, "")
     entries.sort(key=locale.strxfrm)
 
